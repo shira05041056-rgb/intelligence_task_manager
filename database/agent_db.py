@@ -1,4 +1,5 @@
-from database.db_connection import DBManager
+from db_connection import DBManager
+from utils.utils import chek_rank
 
 
 
@@ -7,15 +8,16 @@ class AgentDB:
         self.db = db
 
     def create_agent(self, data):
-        curser = self.db.get_connection().cursor(dictionary=True)
-        curser.execute("""INSERT INTO agents (name, specialty, agent_rank)
-                    VALUES (%s, %s, %s)""",(data.name, data.specialty, data.agent_rank))
-        curser._connection.commit()
-        curser.execute("""SELECT LAST ROW id""")
-        res = curser.fetchone()
-
-        curser.close()
-        return res
+        if chek_rank(data["agent_rank"]):
+            curser = self.db.get_connection().cursor(dictionary=True)
+            curser.execute("""INSERT INTO agents (name, specialty, agent_rank)
+                        VALUES (%s, %s, %s)""",(data["name"], data["specialty"], data["agent_rank"]))
+            curser._connection.commit()
+            curser.execute("""SELECT * FROM agents ORDER BY id DESC LIMIT 1""")
+            res = curser.fetchone()
+            curser.close()
+            return res
+        return "ERROR: rank must be- Low/Junior/Senior/Commander"
     
     def get_all_agents(self):
         curser = self.db.get_connection().cursor(dictionary=True)
@@ -65,25 +67,24 @@ class AgentDB:
     
     def get_agent_performance(self, id):
         curser = self.db.get_connection().cursor(dictionary=True)
-        curser.execute("""SELECT completed_missions FROM agents WHERE id=%s"""(id,))
+        curser.execute("""SELECT completed_missions FROM agents WHERE id=%s""",(id,))
         completed = curser.fetchone()
-        curser.execute("""SELECT failed_missions FROM agents WHERE id=%s"""(id,))
+        curser.execute("""SELECT failed_missions FROM agents WHERE id=%s""",(id,))
         failed = curser.fetchone()
         curser.close()
-        total = completed + failed
+        curser.execute("""SELECT count(*) assigned_agent_id FROM missions WHERE id=%s""",(id,))
+        total = curser.fetchone()
         success_rate = completed / total * 100
         return {
             "completed": completed,
             "failed": failed,
-            "total": total,
+            "total": total["count(*)"],
             "success_rate": success_rate
         }
 
-    def count_active_active(self):
+    def count_active_agents(self):
         curser = self.db.get_connection().cursor(dictionary=True)
-        curser.execute("""SELECT count(*) FROM agents where is_active=True""")
+        curser.execute("""SELECT count(*) as COUNT FROM agents where is_active=True""")
         res = curser.fetchall()
         curser.close()
-        return res["COUNT(*)"]
-
-    
+        return res

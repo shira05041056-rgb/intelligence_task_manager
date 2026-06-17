@@ -9,3 +9,14 @@ def risk_level_chek(difficulty, importance):
         return "HIGH"
     else:
         return "CRITICAL"
+    
+def chek_rank(rank):
+    ranks = ["Low", "Junior", "Junior", "Commander"]
+    if rank not in ranks:
+        return False
+    return True
+
+def chek_difficulty_and_importance(difficulty, importance):
+    if 0 > difficulty and importance  < 11:
+        return True
+    return False

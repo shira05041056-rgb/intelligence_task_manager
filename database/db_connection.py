@@ -6,7 +6,7 @@ class DBManager:
         self.config = {
             "host": "127.0.0.1",
             "port": 3306,
-            "password": 1234,
+            "password": "1234",
             "database": "Intelligence_db",
             "user": "root"
         }
@@ -43,7 +43,8 @@ class DBManager:
     location VARCHAR(50),
     difficulty INT(10),
     importance INT(10),
-    status VARCHAR(50) DEFAULT New,
+    status VARCHAR(50) DEFAULT "New",
     risk_level VARCHAR(50),
     assigned_agent_id INT
 )""")
+        

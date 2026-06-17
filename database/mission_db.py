@@ -1,5 +1,5 @@
 from db_connection import DBManager
-from utils.utils import risk_level_chek
+from utils.utils import risk_level_chek, chek_difficulty_and_importance
 
 
 
@@ -8,14 +8,16 @@ class MissionDB:
         self.db = db
 
     def create_mission(self, data):
-        risk_level = risk_level_chek(data.difficulty, data.importance)
-        curser = self.db.get_connection().cursor(dictionary=True)
-        curser.execute("""INSERT INTO missions (title, description, location, difficulty, importance, risk_level)
-                    VALUES (%s, %s, %s, %s, %s, %s)""",(data.title, data.description, data.location, data.difficulty, data.importance, risk_level))
-        curser._connection.commit()
-        curser.execute("""SELECT * FROM missions ORDER BY id DESC LIMIT 1""")
-        res = curser.fetchone()
-        return res
+        if chek_difficulty_and_importance(data["difficulty"], data["importance"]):
+            risk_level = risk_level_chek(data["difficulty"], data["importance"])
+            curser = self.db.get_connection().cursor(dictionary=True)
+            curser.execute("""INSERT INTO missions (title, description, location, difficulty, importance, risk_level)
+                        VALUES (%s, %s, %s, %s, %s, %s)""",(data["title"], data["description"], data["location"], data["difficulty"], data["importance"], risk_level))
+            curser._connection.commit()
+            curser.execute("""SELECT * FROM missions ORDER BY id DESC LIMIT 1""")
+            res = curser.fetchone()
+            return res
+        return "ERROR: difficulty and importance must be between 1>10"
     
     def get_all_missions(self):
         curser = self.db.get_connection().cursor(dictionary=True)

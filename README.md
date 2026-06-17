@@ -8,10 +8,13 @@ In the data layer there are two tables:
 ## Folder structure.
 
 intelligence-task-manager/\
-├── database\
+├── database/\
 │ ├── db_connection.py\
 │ ├── agent_db.py\
 │ └── mission_db.py\
+├── utils/\
+│ └── utils.py\
+├── main.py\
 ├── README.md\
 ├── requirements.txt\
 └── .gitignore
@@ -114,6 +117,10 @@ docker run --name intelligence-mysql  -e MYSQL_ROOT_PASSWORD=1234  -e MYSQL_DATA
 ### project:
 ~~~
 git clone https://github.com/shira05041056-rgb/intelligence_task_manager.git
+~~~
+### requirements:
+~~~
+pip install -r requirements.txt
 ~~~
 ### The DB layer:
 ~~~
