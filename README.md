@@ -5,6 +5,8 @@ In the data layer there are two tables:
 - agents
 - missions
 
+##
+
 ## Folder structure.
 
 intelligence-task-manager/\
@@ -19,6 +21,7 @@ intelligence-task-manager/\
 ├── requirements.txt\
 └── .gitignore
 
+##
 
 ## The structure of the tables.
 
@@ -49,6 +52,8 @@ intelligence-task-manager/\
 | status | VARCHAR(50) |
 | level_risk | VARCHAR(50) |
 | assigned_agent_id | INT |
+
+##
 
 ## Explanation of the classes.
 
@@ -92,6 +97,8 @@ Responsible for all SQL operations against the missions table.
 - count_critical_missions() = CRITICAL task counter.
 - get_top_agent() = The agent with the highest completed_missions.
 
+##
+
 ## System rules.
 
 | Law number | The law |
@@ -107,6 +114,82 @@ Responsible for all SQL operations against the missions table.
 | 9 | Only a task can be completed - IN_PROGRESS, and changed to completed or failed status. |
 | 10 | You can only cancel a task in the NEW or ASSIGNED status. |
 
+##
+
+## Endpoints:
+
+### Agents endpoints
+
+| Endpoint | Description |
+| ----- | ----: |
+| POST /agents | Create a new agent |
+| GET /agents | get all agents |
+| GET /agents/{id} | get agent by ID |
+| PUT /agents/{id} | update agent |
+| GET /agents/{id}/deactivate | Agent deactivation |
+| GET /agents/{id}/performance | Agent performance |
+
+
+### Missions endpoints
+
+| Endpoint | Description |
+| ----- | ----: |
+| POST /missions | Create a new mission |
+| GET /missions | get all missions |
+| GET /missions/{id} | get mission by ID |
+| PUT /missions/{id}/assign/{agent_id}  | Agent association |
+| PUT /missions/{id}/start | Starting a task |
+| PUT /missions/{id}/complete | Successful completion |
+| PUT /missions/{id}/fail | Failed completion |
+| PUT /missions/{id}/cancel | Canceled task |
+
+### Reports endpoints
+
+| Endpoint | Description |
+| ----- | ----: |
+| GET /reports/summary | General system report |
+| GET /reports/missions-by-status | Tasks by status |
+| GET /reports/top-agent | get top agent |
+
+##
+
+## System flow:
+
+When the server starts, the database is created (if it does not exist), as well as the two tables (if they do not exist).
+
+### Create an agent:
+Receiving data\
+⭣\
+Validation\
+⭣\
+Returning an error if necessary\
+⭣\
+Entering data into a table\
+⭣\
+Returning an object to the user
+
+### Create a mission:
+Receiving data\
+⭣\
+Validation\
+⭣\
+Returning an error if necessary\
+⭣\
+Entering data into a table\
+⭣\
+Returning an object to the user
+
+### Association:
+Receiving id_agent and id_mission\
+⭣\
+Validation\
+⭣\
+Returning an error if necessary\
+⭣\
+Entering data into a table\
+⭣\
+Returning a success message
+##
 
 ## Running instructions:
 
