@@ -17,6 +17,6 @@ def chek_rank(rank):
     return True
 
 def chek_difficulty_and_importance(difficulty, importance):
-    if 0 > difficulty and importance  < 11:
+    if 0 < difficulty and importance < 11:
         return True
     return False

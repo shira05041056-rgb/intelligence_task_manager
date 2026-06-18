@@ -14,8 +14,15 @@ intelligence-task-manager/\
 │ ├── db_connection.py\
 │ ├── agent_db.py\
 │ └── mission_db.py\
+├── routes/\
+│ ├── agent_routes.py\
+│ ├── mission_routes.py\
+│ └── report_routes.py\
 ├── utils/\
-│ └── utils.py\
+│ └── service.py\
+├── logs/\
+│ ├── app.log\
+│ └── logger.py\
 ├── main.py\
 ├── README.md\
 ├── requirements.txt\

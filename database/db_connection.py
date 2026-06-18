@@ -43,7 +43,7 @@ class DBManager:
     location VARCHAR(50),
     difficulty INT(10),
     importance INT(10),
-    status VARCHAR(50) DEFAULT "New",
+    status VARCHAR(50) DEFAULT "NEW",
     risk_level VARCHAR(50),
     assigned_agent_id INT
 )""")
