@@ -65,22 +65,37 @@ def assign_mission(id: int, agent_id: int):
         n += 1
     if n >= 3:
         raise HTTPException(status_code=400, detail="more from 3 missions for agent.")
+    s = MissionDB(db).get_mission_by_id(id)
+    if s["status"] != "NEW":
+        raise HTTPException(status_code=400)
     
     
     return MissionDB(db).assign_mission(id, agent_id)
 
 @router.put("/{id}/start")
 def starting_mission(id: int):
+    s = MissionDB(db).get_mission_by_id(id)
+    if s["status"] != "ASSIGNED":
+        raise HTTPException(status_code=400)
     return MissionDB(db).update_mission_status(id, "IN_PROGRESS")
 
 @router.put("/{id}/complete")
 def conplete_mission(id: int):
+    s = MissionDB(db).get_mission_by_id(id)
+    if s["status"] != "IN_PROGRESS":
+        raise HTTPException(status_code=400)
     return MissionDB(db).update_mission_status(id, "COMPLETED")
 
 @router.put("/{id}/fail")
 def failed_mission(id: int):
+    s = MissionDB(db).get_mission_by_id(id)
+    if s["status"] != "IN_PROGRESS":
+        raise HTTPException(status_code=400)
     return MissionDB(db).update_mission_status(id, "FAILED")
 
 @router.put("/{id}/cancel")
 def cancel_mission(id: int):
+    s = MissionDB(db).get_mission_by_id(id)
+    if s["status"] != "ASSIGNED" OR s["status"] != "NEW":
+        raise HTTPException(status_code=400)
     return MissionDB(db).update_mission_status(id, "CANCELLED")
